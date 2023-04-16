@@ -1,0 +1,36 @@
+{
+  "ans_contract_address": "VGWeJLDLJ9ify3ezl9tW-9fhB0G-GIUd60FE-5Q-_VI",
+  "admin": "vZY2XY1RD9HIfWi8ift-1_DnHLDadZMWrufSh-_rKF0",
+  "ar_molecule_endpoint": "http://ar.molecule.sh",
+  "supported_code_points": [
+    "1f600",
+    "1f603",
+    "1f604",
+    "1f601",
+    "1f606",
+    "1f605",
+    "1f923",
+    "1f602",
+    "1f642",
+    "1f643"
+  ],
+  "allowance": {
+    "l2": 90,
+    "l3": 39,
+    "l4": 21,
+    "l5": 14,
+    "l6": 11,
+    "l7": 9,
+    "l8": 8,
+    "l9": 7,
+    "l10": 6,
+    "l11": 5,
+    "l12": 4,
+    "l13": 3,
+    "l14": 2,
+    "l15": 1
+  },
+  "records": [],
+  "signatures": [],
+  "sig_message": ["ans-armoji"]
+}

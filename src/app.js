@@ -22,7 +22,7 @@ app.all("/", async (req, res) => {
 
     res
       .status(301)
-      .redirect(`https://armoji.herokuapp.com/${punycode.toUnicode(armoji)}`);
+      .redirect(`http://arweave.bio/${punycode.toUnicode(armoji)}`);
     res.end();
   } catch (error) {
     console.log(error);

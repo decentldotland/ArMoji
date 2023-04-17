@@ -18,29 +18,14 @@ app.use(
 
 app.all("/", async (req, res) => {
   try {
-    const armoji = req.headers.host?.split(".")?.[0];
+    const punnycodes = req.headers.host?.split(".")?.[0];
+    const armoji = punycode.toUnicode(punnycodes);
+    const recordTx = await getRecordOfArmojis(emojiUnicode(armoji).split(" "));
 
-    res
-      .status(301)
-      .redirect(`https://armoji.herokuapp.com/${punycode.toUnicode(armoji)}`);
+    res.status(301).redirect(`http://arweave.net/${recordTx}`);
     res.end();
   } catch (error) {
     console.log(error);
-    res.end();
-  }
-});
-
-app.get("/:emojis?", async (req, res) => {
-  try {
-    const armoji = emojiUnicode(req.params.emojis).split(" ");
-    const recordTx = await getRecordOfArmojis(armoji);
-    const content = await getRecordValue(recordTx);
-    res.setHeader("Content-Type", Object.values(content?.headers)?.[0]);
-    res.send(Buffer.from(content?.data, "binary"));
-    res.end();
-  } catch (error) {
-    console.log(error);
-    res.status(301).redirect(`https://ans.gg`);
     res.end();
   }
 });

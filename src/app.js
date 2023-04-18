@@ -3,7 +3,7 @@ import cors from "cors";
 import axios from "axios";
 import emojiUnicode from "emoji-unicode";
 import punycode from "punycode";
-import { validateCodePoints } from "./utils/emoji.js";
+import { validateCodePoints, getRecordType } from "./utils/emoji.js";
 import { getRecordOfArmojis, getRecordValue } from "./utils/exm.js";
 
 const app = express();
@@ -20,9 +20,14 @@ app.all("/", async (req, res) => {
   try {
     const punnycodes = req.headers.host?.split(".")?.[0];
     const armoji = punycode.toUnicode(punnycodes);
-    const recordTx = await getRecordOfArmojis(emojiUnicode(armoji).split(" "));
+    const record = await getRecordOfArmojis(emojiUnicode(armoji).split(" "));
+    const recordType = getRecordType(record);
+    if (recordType === "url") {
+      res.status(301).redirect(record);
+      res.end();
+    }
 
-    res.status(301).redirect(`http://arweave.net/${recordTx}`);
+    res.status(301).redirect(`http://arweave.net/${record}`);
     res.end();
   } catch (error) {
     console.log(error);

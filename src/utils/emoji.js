@@ -15,3 +15,20 @@ export function validateCodePoints(code_points) {
     throw error;
   }
 }
+
+export function getRecordType(record) {
+  try {
+    const isValidTx = /[a-z0-9_-]{43}/i.test(record);
+    const isValidUrl =
+      /^(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9]+\.[a-zA-Z]{2,}(?:\/[a-zA-Z0-9#]+\/?)*$/.test(
+        record
+      );
+    assert.equal([isValidTx, isValidUrl].includes(true), true);
+    const type = isValidTx ? "tx" : "url";
+    return type;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+

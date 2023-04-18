@@ -5,6 +5,7 @@ export async function handle(state, action) {
     const { code_points, domain, jwk_n, sig, record_tx } = input;
     _validateCodePoints(code_points);
     _isNotClaimed(code_points);
+    _validateRecord(record_tx);
 
     await _verifyArSignature(jwk_n, sig);
     const caller = await _ownerToAddress(jwk_n);
@@ -40,6 +41,7 @@ export async function handle(state, action) {
     const { jwk_n, sig, domain, code_points, record_tx } = input;
 
     _validateCodePoints(code_points);
+    _validateRecord(record_tx);
 
     await _verifyArSignature(jwk_n, sig);
     const caller = await _ownerToAddress(jwk_n);
@@ -60,7 +62,7 @@ export async function handle(state, action) {
   }
 
   if (input.function === "delArmojiRecord") {
-    const { jwk_n, sig, domain, code_points, record_tx } = input;
+    const { jwk_n, sig, domain, code_points } = input;
 
     _validateCodePoints(code_points);
 
@@ -139,6 +141,12 @@ export async function handle(state, action) {
   }
 
   // HELPER FUNCTIONS
+
+  function _validateRecord(record) {
+    const isValidTx = /[a-z0-9_-]{43}/i.test(record);
+    const isValidUrl = /^(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9]+\.[a-zA-Z]{2,}(?:\/[a-zA-Z0-9#]+\/?)*$/.test(record);
+    ContractAssert(isValidTx || isValidUrl, "ERROR_INVALID_RECORD_VALUE");
+  }
 
   function _validateCodePoints(codes) {
     for (const code of codes) {

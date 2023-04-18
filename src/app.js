@@ -25,10 +25,12 @@ app.all("/", async (req, res) => {
     if (recordType === "url") {
       res.status(301).redirect(record);
       res.end();
+      return;
     }
 
     res.status(301).redirect(`http://arweave.net/${record}`);
     res.end();
+    return;
   } catch (error) {
     console.log(error);
     res.end();

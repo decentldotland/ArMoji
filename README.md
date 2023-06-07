@@ -25,7 +25,7 @@ Check the current emoji's code points that are supported by the ArMoji [contract
 ## Contract
 
 - [source code](./contract)
-- live deployment: [vX-_CV96AjqXOwwFq3BC6IO_FyW5-x7ZI0ag07R40mM](https://api.exm.dev/read/vX-_CV96AjqXOwwFq3BC6IO_FyW5-x7ZI0ag07R40mM)
+- live deployment: [I2S3OQ2WC6kQX7pHqdCSJvB8dAaGIYZNVkS3vuEoaEI](https://api.exm.dev/read/I2S3OQ2WC6kQX7pHqdCSJvB8dAaGIYZNVkS3vuEoaEI)
 
 ## Gateway
 ArMojis are resolved under the arweave.bio gateway. an ArMoji can be assigned to an Arweave TXID or a URL. examples:

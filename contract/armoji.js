@@ -144,7 +144,7 @@ export async function handle(state, action) {
 
   function _validateRecord(record) {
     const isValidTx = /[a-z0-9_-]{43}/i.test(record);
-    const isValidUrl = /^(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9]+\.[a-zA-Z]{2,}(?:\/[a-zA-Z0-9#]+\/?)*$/.test(record);
+    const isValidUrl = record.startsWith("https") || record.startsWith("http");
     ContractAssert(isValidTx || isValidUrl, "ERROR_INVALID_RECORD_VALUE");
   }
 

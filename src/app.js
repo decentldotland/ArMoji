@@ -28,7 +28,7 @@ app.all("/", async (req, res) => {
       return;
     }
 
-    res.status(301).redirect(`http://arweave.net/${record}`);
+    res.status(301).redirect(`https://arweave.net/${record}`);
     res.end();
     return;
   } catch (error) {

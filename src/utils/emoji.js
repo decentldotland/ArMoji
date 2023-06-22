@@ -19,12 +19,9 @@ export function validateCodePoints(code_points) {
 export function getRecordType(record) {
   try {
     const isValidTx = /[a-z0-9_-]{43}/i.test(record);
-    const isValidUrl =
-      /^(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9]+\.[a-zA-Z]{2,}(?:\/[a-zA-Z0-9#]+\/?)*$/.test(
-        record
-      );
+    const isValidUrl = record.startsWith("https") || record.startsWith("http");
     assert.equal([isValidTx, isValidUrl].includes(true), true);
-    const type = isValidTx ? "tx" : "url";
+    const type = isValidUrl ? "url" : "tx";
     return type;
   } catch (error) {
     console.log(error);

@@ -11,4 +11,4 @@ export const SUPPORTED_CODE_POINTS = [
   "1f643",
 ];
 
-export const ARMOJI_CONTRACT_ADDRESS = `vX-_CV96AjqXOwwFq3BC6IO_FyW5-x7ZI0ag07R40mM`;
+export const ARMOJI_CONTRACT_ADDRESS = `fuSglSIRtbu9Fu5RZa8dS9_Y8sDV5QZNAHg_zddbAck`;

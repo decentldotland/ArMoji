@@ -12,7 +12,7 @@ export async function handle(state, action) {
     await _verifyCallerDomain(caller, domain);
 
     const domainIndex = state.records.findIndex(
-      (record) => record.domain === domain
+      (record) => record.domain === domain,
     );
     _validateCodePointsLimitPerDomain(domain, code_points);
 
@@ -30,7 +30,7 @@ export async function handle(state, action) {
 
     ContractAssert(
       !!state.records[domainIndex].allowance,
-      "ERROR_DOMAIN_REACHED_ALLOWANCE"
+      "ERROR_DOMAIN_REACHED_ALLOWANCE",
     );
     state.records[domainIndex].records[JSON.stringify(code_points)] = record_tx;
     state.records[domainIndex].allowance -= 1;
@@ -48,14 +48,14 @@ export async function handle(state, action) {
     await _verifyCallerDomain(caller, domain);
 
     const domainIndex = state.records.findIndex(
-      (record) => record.domain === domain
+      (record) => record.domain === domain,
     );
 
     ContractAssert(domainIndex >= 0, "ERROR_RECORD_DOMAIN_NOT_FOUND");
     const recordObj = state.records[domainIndex];
     ContractAssert(
       !!recordObj.records[JSON.stringify(code_points)],
-      "ERROR_CODE_POINTS_NOT_FOUND"
+      "ERROR_CODE_POINTS_NOT_FOUND",
     );
     state.records[domainIndex].records[JSON.stringify(code_points)] = record_tx;
     return { state };
@@ -71,14 +71,14 @@ export async function handle(state, action) {
     await _verifyCallerDomain(caller, domain);
 
     const domainIndex = state.records.findIndex(
-      (record) => record.domain === domain
+      (record) => record.domain === domain,
     );
 
     ContractAssert(domainIndex >= 0, "ERROR_RECORD_DOMAIN_NOT_FOUND");
     const recordObj = state.records[domainIndex];
     ContractAssert(
       !!recordObj.records[JSON.stringify(code_points)],
-      "ERROR_CODE_POINTS_NOT_FOUND"
+      "ERROR_CODE_POINTS_NOT_FOUND",
     );
     state.records[domainIndex].allowance += 1;
     delete state.records[domainIndex].records[JSON.stringify(code_points)];
@@ -96,7 +96,7 @@ export async function handle(state, action) {
       typeof code_point === "string" &&
         code_point.trim().length &&
         !state.supported_code_points.includes(code_point.trim()),
-      "ERROR_NEW_CODE_POINT_INVALID"
+      "ERROR_NEW_CODE_POINT_INVALID",
     );
     state.supported_code_points.push(code_point.trim());
 
@@ -113,10 +113,10 @@ export async function handle(state, action) {
       typeof code_point === "string" &&
         code_point.trim().length &&
         state.supported_code_points.includes(code_point.trim()),
-      "ERROR_NEW_CODE_POINT_INVALID"
+      "ERROR_NEW_CODE_POINT_INVALID",
     );
     const codePointIndex = state.supported_code_points.findIndex(
-      (point) => point === code_point.trim()
+      (point) => point === code_point.trim(),
     );
     state.supported_code_points.splice(codePointIndex, 1);
 
@@ -133,10 +133,25 @@ export async function handle(state, action) {
       typeof message === "string" &&
         message.trim().length &&
         message !== state.sig_message,
-      "ERROR_INVALID_NEW_SIG_MESSAGE"
+      "ERROR_INVALID_NEW_SIG_MESSAGE",
     );
     state.sig_message.push(message.trim());
     state.signatures = [];
+    return { state };
+  }
+
+  if (input.function === "importState") {
+    ContractAssert(!state.isImported, "ERROR_STATE_IMPORTED");
+    const importedState = (
+      await EXM.deterministicFetch(
+        `https://arweave.net/Xv80V4BK2bf8pKoZr4gaTchwbA_xwQOi2qfWocmlz-E`,
+      )
+    ).asJSON();
+    importedState.isImported = true;
+    importedState.ans_contract_address =
+      "rExhMDVqLfSTdSCwG95_VOe2a3MuKGA0ukGPO0ra9GQ";
+    state = importedState;
+
     return { state };
   }
 
@@ -152,7 +167,7 @@ export async function handle(state, action) {
     for (const code of codes) {
       ContractAssert(
         state.supported_code_points.includes(code.toLowerCase()),
-        "ERROR_CODE_POINT_NOT_SUPPORTED"
+        "ERROR_CODE_POINT_NOT_SUPPORTED",
       );
     }
   }
@@ -163,7 +178,7 @@ export async function handle(state, action) {
       .flat();
     ContractAssert(
       !stateCodePoints.includes(JSON.stringify(code_points)),
-      "ERROR_ARMOJI_ALREADY_CLAIMED"
+      "ERROR_ARMOJI_ALREADY_CLAIMED",
     );
   }
 
@@ -180,14 +195,14 @@ export async function handle(state, action) {
   function _validateArweaveAddress(address) {
     ContractAssert(
       /[a-z0-9_-]{43}/i.test(address),
-      "ERROR_INVALID_ARWEAVE_ADDRESS"
+      "ERROR_INVALID_ARWEAVE_ADDRESS",
     );
   }
 
   function _validateOwnerSyntax(owner) {
     ContractAssert(
       typeof owner === "string" && owner?.length === 683,
-      "ERROR_INVALID_JWK_N_SYNTAX"
+      "ERROR_INVALID_JWK_N_SYNTAX",
     );
   }
 
@@ -204,7 +219,7 @@ export async function handle(state, action) {
     try {
       _validateOwnerSyntax(pubkey);
       const req = await EXM.deterministicFetch(
-        `${state.ar_molecule_endpoint}/ota/${pubkey}`
+        `${state.ar_molecule_endpoint}/ota/${pubkey}`,
       );
       const address = req.asJSON()?.address;
       _validateArweaveAddress(address);
@@ -217,7 +232,7 @@ export async function handle(state, action) {
   async function _getAnsState() {
     try {
       const req = await EXM.deterministicFetch(
-        `https://api.exm.dev/read/${state.ans_contract_address}`
+        `https://api.mem.tech/api/state/${state.ans_contract_address}`,
       );
       return req.asJSON()?.balances;
     } catch (error) {
@@ -229,19 +244,19 @@ export async function handle(state, action) {
     try {
       ContractAssert(
         !state.signatures.includes(signature),
-        "ERROR_SIGNATURE_ALREADY_USED"
+        "ERROR_SIGNATURE_ALREADY_USED",
       );
 
       const encodedMessage = new TextEncoder().encode(
-        state.sig_message[state.sig_message.length - 1]
+        state.sig_message[state.sig_message.length - 1],
       );
       const typedArraySig = Uint8Array.from(atob(signature), (c) =>
-        c.charCodeAt(0)
+        c.charCodeAt(0),
       );
       const isValid = await SmartWeave.arweave.crypto.verify(
         owner,
         encodedMessage,
-        typedArraySig
+        typedArraySig,
       );
 
       ContractAssert(isValid, "ERROR_INVALID_CALLER_SIGNATURE");
